@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+#if 0
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -162,7 +162,8 @@ void save_Img(ImgArr imgarr,char* filedir) // 将图像数据保存成文件
 		
 		fclose(fp);
 	}	
-=======
+
+#else
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -322,5 +323,5 @@ void save_Img(ImgArr imgarr,char* filedir) // 将图像数据保存成文件
 		
 		fclose(fp);
 	}	
->>>>>>> 46993395e1691dc4e415b2299b9aa0ff7fc9e094
 }
+#endif

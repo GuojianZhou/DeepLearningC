@@ -10,9 +10,9 @@
 // 以下都是测试函数，可以不用管
 // 测试Minst模块是否工作正常
 void test_minst(){
-	LabelArr testLabel=read_Lable("E:\\Code\\VS2010 code\\CNN\\Minst\\test-labels.idx1-ubyte");
-	ImgArr testImg=read_Img("E:\\Code\\VS2010 code\\CNN\\Minst\\test-images.idx3-ubyte");
-	save_Img(testImg,"E:\\Code\\VS2010 code\\CNN\\Minst\\testImgs\\");
+	LabelArr testLabel=read_Lable("../Minst/test-labels-idx1-ubyte");
+	ImgArr testImg=read_Img("../Minst/test-images-idx3-ubyte");
+	save_Img(testImg,"../Minst/testImgs");
 }
 // 测试Mat模块是否工作正常
 void test_mat(){
@@ -42,15 +42,15 @@ void test_mat(){
 	nSize cov3size={srcSize.c-(mapSize.c-1),srcSize.r-(mapSize.r-1)};
 	float** cov3=cov(map,mapSize,src,srcSize,valid);
 
-	savemat(src,srcSize,"E:\\Code\\Matlab\\PicTrans\\src.ma");
-	savemat(map,mapSize,"E:\\Code\\Matlab\\PicTrans\\map.ma");
-	savemat(cov1,cov1size,"E:\\Code\\Matlab\\PicTrans\\cov1.ma");
-	//savemat(cov2,cov2size,"E:\\Code\\Matlab\\PicTrans\\cov2.ma");
-	savemat(cov3,cov3size,"E:\\Code\\Matlab\\PicTrans\\cov3.ma");
+	savemat(src,srcSize,"../Matlab/PicTrans/gsrc.ma");
+	savemat(map,mapSize,"../Matlab/PicTrans/gmap.ma");
+	savemat(cov1,cov1size,"../Matlab/PicTrans/gcov1.ma");
+	//savemat(cov2,cov2size,"../Matlab/PicTrans/gcov2.ma");
+	savemat(cov3,cov3size,"../Matlab/PicTrans/gcov3.ma");
 
 	float** sample=UpSample(src,srcSize,2,2);
 	nSize samSize={srcSize.c*2,srcSize.r*2};
-	savemat(sample,samSize,"E:\\Code\\Matlab\\PicTrans\\sam.ma");
+	savemat(sample,samSize,"../Matlab/PicTrans/gsam.ma");
 }
 void test_mat1()
 {
@@ -94,21 +94,21 @@ void test_mat1()
 	addmat(cov1,cov1,covsize,cov3,covsize);
 
 
-	savemat(src,srcSize,"E:\\Code\\Matlab\\PicTrans\\src.ma");
-	savemat(map1,mapSize,"E:\\Code\\Matlab\\PicTrans\\map1.ma");
-	savemat(map2,mapSize,"E:\\Code\\Matlab\\PicTrans\\map2.ma");
-	savemat(map3,mapSize,"E:\\Code\\Matlab\\PicTrans\\map3.ma");
-	savemat(cov1,covsize,"E:\\Code\\Matlab\\PicTrans\\cov1.ma");
-	savemat(cov2,covsize,"E:\\Code\\Matlab\\PicTrans\\cov2.ma");
-	savemat(cov3,covsize,"E:\\Code\\Matlab\\PicTrans\\cov3.ma");
+	savemat(src,srcSize,"../Matlab/PicTrans/gsrc.ma");
+	savemat(map1,mapSize,"../Matlab/PicTrans/gmap1.ma");
+	savemat(map2,mapSize,"../Matlab/PicTrans/gmap2.ma");
+	savemat(map3,mapSize,"../Matlab/PicTrans/gmap3.ma");
+	savemat(cov1,covsize,"../Matlab/PicTrans/gcov1.ma");
+	savemat(cov2,covsize,"../Matlab/PicTrans/gcov2.ma");
+	savemat(cov3,covsize,"../Matlab/PicTrans/gcov3.ma");
 
 }
 // 测试cnn模块是否工作正常
 void test_cnn()
 {
 
-	LabelArr testLabel=read_Lable("E:\\Code\\VS2010 code\\CNN\\Minst\\train-labels.idx1-ubyte");
-	ImgArr testImg=read_Img("E:\\Code\\VS2010 code\\CNN\\Minst\\train-images.idx3-ubyte");
+	LabelArr testLabel=read_Lable("../Minst/train-labels-idx1-ubyte");
+	ImgArr testImg=read_Img("../Minst/train-images-idx3-ubyte");
 
 	nSize inputSize={testImg->ImgPtr[0].c,testImg->ImgPtr[0].r};
 	int outSize=testLabel->LabelPtr[0].l;
@@ -123,7 +123,7 @@ void test_cnn()
 	cnntrain(cnn,testImg,testLabel,opts,trainNum);
 
 	FILE  *fp=NULL;
-	fp=fopen("E:\\Code\\Matlab\\PicTrans\\cnnL.ma","wb");
+	fp=fopen("../Matlab/PicTrans/cnnL.ma","wb");
 	if(fp==NULL)
 		printf("write file failed\n");
 	fwrite(cnn->L,sizeof(float),trainNum,fp);
@@ -134,10 +134,10 @@ void test_cnn()
 /*主函数*/
 int main()
 {
-	LabelArr trainLabel=read_Lable("E:\\Code\\VS2010 code\\CNN\\Minst\\train-labels.idx1-ubyte");
-	ImgArr trainImg=read_Img("E:\\Code\\VS2010 code\\CNN\\Minst\\train-images.idx3-ubyte");
-	LabelArr testLabel=read_Lable("E:\\Code\\VS2010 code\\CNN\\Minst\\test-labels.idx1-ubyte");
-	ImgArr testImg=read_Img("E:\\Code\\VS2010 code\\CNN\\Minst\\test-images.idx3-ubyte");
+	LabelArr trainLabel=read_Lable("../Minst/train-labels-idx1-ubyte");
+	ImgArr trainImg=read_Img("../Minst/train-images-idx3-ubyte");
+	LabelArr testLabel=read_Lable("../Minst/test-labels-idx1-ubyte");
+	ImgArr testImg=read_Img("../Minst/test-images-idx3-ubyte");
 
 	nSize inputSize={testImg->ImgPtr[0].c,testImg->ImgPtr[0].r};
 	int outSize=testLabel->LabelPtr[0].l;
@@ -146,28 +146,26 @@ int main()
 	CNN* cnn=(CNN*)malloc(sizeof(CNN));
 	cnnsetup(cnn,inputSize,outSize);
 
-	// CNN训练
-	/*
+	// CNN Train
+	
 	CNNOpts opts;
 	opts.numepochs=1;
 	opts.alpha=1.0;
-	int trainNum=55000;
+	int trainNum=10; //55000;
 	cnntrain(cnn,trainImg,trainLabel,opts,trainNum);
 	printf("train finished!!\n");
-	savecnn(cnn,"minst.cnn");
+	savecnn(cnn,"../Minst/minst.cnn");
 	// 保存训练误差
 	FILE  *fp=NULL;
-	fp=fopen("E:\\Code\\Matlab\\PicTrans\\cnnL.ma","wb");
+	fp=fopen("../Matlab/PicTrans/cnnL.ma","wb");
 	if(fp==NULL)
 		printf("write file failed\n");
 	fwrite(cnn->L,sizeof(float),trainNum,fp);
 	fclose(fp);
-	*/
 
-
-	// CNN测试
-	importcnn(cnn,"minst.cnn");
-	int testNum=10000;
+	// CNN Test
+	importcnn(cnn,"../Minst/minst.cnn");
+	int testNum=5; //10000;
 	float incorrectRatio=0.0;
 	incorrectRatio=cnntest(cnn,testImg,testLabel,testNum);
 	printf("test finished!!\n");
